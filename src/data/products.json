@@ -1,0 +1,76 @@
+[
+  {
+    "id": "p1",
+    "title": "Apple AirPods Pro (2nd gen, USB-C)",
+    "brand": "Apple",
+    "category": "Headphones",
+    "best_price": 199.00,
+    "image": "https://images.unsplash.com/photo-1588421357574-87938a86fa28?q=80&w=1200&auto=format&fit=crop",
+    "retailers": [
+      { "name": "Amazon UK", "price": 199.00, "url": "https://www.amazon.co.uk/s?k=airpods+pro" },
+      { "name": "Argos", "price": 209.00, "url": "https://www.argos.co.uk/search/airpods-pro/" },
+      { "name": "Currys", "price": 219.00, "url": "https://www.currys.co.uk/" }
+    ]
+  },
+  {
+    "id": "p2",
+    "title": "Samsung 55\" 4K UHD Smart TV",
+    "brand": "Samsung",
+    "category": "Television",
+    "best_price": 429.00,
+    "image": "https://images.unsplash.com/photo-1593359677879-53661aa2a56b?q=80&w=1200&auto=format&fit=crop",
+    "retailers": [
+      { "name": "Amazon UK", "price": 429.00, "url": "https://www.amazon.co.uk/s?k=samsung+55+tv" },
+      { "name": "Tesco", "price": 449.00, "url": "https://www.tesco.com/" },
+      { "name": "Argos", "price": 459.00, "url": "https://www.argos.co.uk/" }
+    ]
+  },
+  {
+    "id": "p3",
+    "title": "LEGO Technic Supercar",
+    "brand": "LEGO",
+    "category": "Toys",
+    "best_price": 149.99,
+    "image": "https://images.unsplash.com/photo-1585366119957-e9730b6d0f4b?q=80&w=1200&auto=format&fit=crop",
+    "retailers": [
+      { "name": "Amazon UK", "price": 149.99, "url": "https://www.amazon.co.uk/s?k=lego+technic+car" },
+      { "name": "Smyths", "price": 159.99, "url": "https://www.smythstoys.com/uk/en-gb" }
+    ]
+  },
+  {
+    "id": "p4",
+    "title": "Dyson V10 Absolute Cordless Vacuum",
+    "brand": "Dyson",
+    "category": "Home Appliances",
+    "best_price": 329.00,
+    "image": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1200&auto=format&fit=crop",
+    "retailers": [
+      { "name": "Currys", "price": 329.00, "url": "https://www.currys.co.uk/" },
+      { "name": "Argos", "price": 349.00, "url": "https://www.argos.co.uk/" }
+    ]
+  },
+  {
+    "id": "p5",
+    "title": "Sony WH-1000XM5 Noise Cancelling Headphones",
+    "brand": "Sony",
+    "category": "Headphones",
+    "best_price": 279.00,
+    "image": "https://images.unsplash.com/photo-1518449033191-4a2a7e3c1ff1?q=80&w=1200&auto=format&fit=crop",
+    "retailers": [
+      { "name": "Amazon UK", "price": 279.00, "url": "https://www.amazon.co.uk/s?k=sony+wh-1000xm5" },
+      { "name": "Currys", "price": 289.00, "url": "https://www.currys.co.uk/" }
+    ]
+  },
+  {
+    "id": "p6",
+    "title": "Nintendo Switch OLED (White)",
+    "brand": "Nintendo",
+    "category": "Gaming",
+    "best_price": 299.99,
+    "image": "https://images.unsplash.com/photo-1589779781326-c8e4b0b1b178?q=80&w=1200&auto=format&fit=crop",
+    "retailers": [
+      { "name": "Amazon UK", "price": 299.99, "url": "https://www.amazon.co.uk/s?k=nintendo+switch+oled" },
+      { "name": "Argos", "price": 309.99, "url": "https://www.argos.co.uk/" }
+    ]
+  }
+]
