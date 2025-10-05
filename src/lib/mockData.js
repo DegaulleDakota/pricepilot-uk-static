@@ -1,0 +1,43 @@
+// Temporary mock data to demonstrate search & UI
+export const MOCK_ITEMS = [
+  {
+    id: '1',
+    title: 'Apple iPhone 14 128GB',
+    description: 'Unlocked smartphone with 6.1-inch display',
+    price: 629.99,
+    retailer: 'Amazon',
+    url: 'https://www.amazon.co.uk/',
+    image: '',
+    tags: ['iphone', 'apple', 'phone'],
+  },
+  {
+    id: '2',
+    title: 'Samsung Galaxy S23 256GB',
+    description: 'Pro-grade camera and all-day battery',
+    price: 599.0,
+    retailer: 'Argos',
+    url: 'https://www.argos.co.uk/',
+    image: '',
+    tags: ['samsung', 'galaxy', 'phone'],
+  },
+  {
+    id: '3',
+    title: 'Sony WH-1000XM5 Headphones',
+    description: 'Industry-leading noise cancellation',
+    price: 279.0,
+    retailer: 'Tesco',
+    url: 'https://www.tesco.com/',
+    image: '',
+    tags: ['sony', 'headphones', 'audio'],
+  },
+  {
+    id: '4',
+    title: 'Nintendo Switch OLED',
+    description: 'White Joy-Con, 64GB storage',
+    price: 289.99,
+    retailer: 'eBay',
+    url: 'https://www.ebay.co.uk/',
+    image: '',
+    tags: ['nintendo', 'switch', 'console'],
+  },
+]
