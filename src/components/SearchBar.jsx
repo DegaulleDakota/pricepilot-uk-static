@@ -1,47 +1,27 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 
-/**
- * Props:
- * - initialQuery?: string
- * - onSearch?: (q: string) => void
- */
-export default function SearchBar({ initialQuery = "", onSearch }) {
-  const [query, setQuery] = useState(initialQuery);
-
-  // If parent later changes the initial query, reflect it
-  useEffect(() => setQuery(initialQuery), [initialQuery]);
+export default function SearchBar({ onSearch, defaultValue = "" }) {
+  const [value, setValue] = useState(defaultValue);
 
   function submit(e) {
-    e?.preventDefault();
-    const q = query.trim();
-    if (!q) return;
-    if (typeof onSearch === "function") onSearch(q);
+    e.preventDefault();
+    onSearch?.(value);
   }
 
   return (
-    <form onSubmit={submit} className="w-full">
-      <div className="mx-auto max-w-3xl px-4 py-5">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder='Search laptops, TVs, AirPods, "Lego"...'
-            className="flex-1 rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="submit"
-            className="rounded-xl px-5 py-3 bg-blue-600 text-white font-medium hover:bg-blue-700"
-          >
-            Search
-          </button>
-        </div>
-        <p className="mt-2 text-xs text-gray-500">
-          Tip: try <span className="font-medium">"iphone"</span>,{" "}
-          <span className="font-medium">"headphones"</span>, or{" "}
-          <span className="font-medium">"lego"</span>.
-        </p>
-      </div>
+    <form onSubmit={submit} className="flex gap-2">
+      <input
+        className="flex-1 border rounded-md px-3 py-2"
+        placeholder="Search laptops, TVs, AirPods, Lego…"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <button
+        type="submit"
+        className="px-4 py-2 rounded-md border bg-black text-white"
+      >
+        Search
+      </button>
     </form>
   );
 }
