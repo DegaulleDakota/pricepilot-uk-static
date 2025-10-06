@@ -1,18 +1,22 @@
+import React from "react";
+
 export default function Header() {
   return (
-    <header className="bg-brand-600 text-white">
-      <div className="mx-auto max-w-6xl px-4 py-8">
-        <div className="flex items-center gap-3">
-          <img src="/pricepilot.svg" alt="PricePilot UK" className="h-10 w-10" />
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">PricePilot UK</h1>
-            <p className="text-white/85 text-sm">
-              Compare prices across UK retailers — fast.
-            </p>
-          </div>
-        </div>
+    <header className="w-full border-b bg-white/70 backdrop-blur sticky top-0 z-30">
+      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+        <a href="/" className="flex items-center gap-2">
+          <div className="h-8 w-8 rounded-full bg-blue-500/90" />
+          <span className="text-xl font-semibold">
+            Pricepilot <span className="text-blue-600">UK</span>
+          </span>
+        </a>
+
+        <nav className="hidden sm:flex items-center gap-6 text-sm text-gray-600">
+          <a href="/about" className="hover:text-gray-900">About</a>
+          <a href="/privacy" className="hover:text-gray-900">Privacy</a>
+          <a href="/terms" className="hover:text-gray-900">Terms</a>
+        </nav>
       </div>
-      <div className="h-20 bg-gradient-to-b from-brand-600 to-brand-700"></div>
     </header>
   );
 }

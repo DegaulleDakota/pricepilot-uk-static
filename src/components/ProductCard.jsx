@@ -1,43 +1,69 @@
-import cn from 'classnames'
+import React from "react";
 
-export default function ProductCard({ item, onToggleFav, isFavourite }) {
+/**
+ * Expects a SerpAPI Shopping result-like object:
+ * {
+ *   title, price, extracted_price, source, rating, reviews, link, product_link, thumbnail
+ * }
+ */
+export default function ProductCard({ item = {} }) {
+  const {
+    title = "Untitled product",
+    price,
+    extracted_price,
+    source,
+    rating,
+    reviews,
+    link,
+    product_link,
+    thumbnail,
+  } = item;
+
+  const href = product_link || link || "#";
+  const img = thumbnail || "";
+  const priceLabel =
+    price ??
+    (typeof extracted_price === "number"
+      ? `£${extracted_price.toFixed(2)}`
+      : "—");
+
   return (
-    <div className="rounded-2xl border bg-white p-4 flex gap-4">
-      <div className="h-24 w-24 rounded-xl bg-slate-100 flex items-center justify-center text-xs">
-        {item.image ? (
-          <img src={item.image} alt={item.title} className="h-24 w-24 object-cover rounded-xl" />
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group block rounded-2xl border bg-white hover:shadow-md transition-shadow"
+    >
+      <div className="aspect-[4/3] w-full overflow-hidden rounded-t-2xl bg-gray-100">
+        {img ? (
+          <img
+            src={img}
+            alt={title}
+            className="h-full w-full object-contain group-hover:scale-[1.02] transition-transform"
+            loading="lazy"
+          />
         ) : (
-          <span className="opacity-60">No image</span>
+          <div className="h-full w-full bg-gradient-to-br from-gray-100 to-gray-200" />
         )}
       </div>
-      <div className="flex-1">
-        <h3 className="font-semibold leading-snug">{item.title}</h3>
-        <p className="text-sm text-slate-600 line-clamp-2">{item.description}</p>
-        <div className="mt-2 text-sm">
-          <span className="font-mono">£{item.price.toFixed(2)}</span>
-          <span className="mx-2 opacity-50">·</span>
-          <span className="uppercase text-xs tracking-wide">{item.retailer}</span>
+
+      <div className="p-4">
+        <div className="mb-1 line-clamp-2 font-medium text-gray-900">
+          {title}
         </div>
-        <div className="mt-3 flex gap-2">
-          <a
-            href={item.url}
-            target="_blank"
-            rel="noreferrer"
-            className="px-3 py-2 rounded-xl border hover:bg-slate-50"
-          >
-            View on {item.retailer}
-          </a>
-          <button
-            onClick={() => onToggleFav(item.id)}
-            className={cn(
-              'px-3 py-2 rounded-xl border',
-              isFavourite ? 'bg-yellow-100 border-yellow-300' : 'hover:bg-slate-50'
-            )}
-          >
-            {isFavourite ? '★ Saved' : '☆ Save'}
-          </button>
+
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-blue-700 font-semibold">{priceLabel}</span>
+          <span className="text-gray-500">{source || "Merchant"}</span>
         </div>
+
+        {(rating || reviews) && (
+          <div className="mt-1 text-xs text-gray-500">
+            {rating ? `${rating}★` : ""}{" "}
+            {reviews ? `(${reviews.toLocaleString()} reviews)` : ""}
+          </div>
+        )}
       </div>
-    </div>
-  )
+    </a>
+  );
 }

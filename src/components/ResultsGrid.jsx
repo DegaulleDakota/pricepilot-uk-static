@@ -1,19 +1,32 @@
-import PriceCard from "./cards/PriceCard.jsx";
+import React from "react";
+import ProductCard from "./ProductCard";
 
-export default function ResultsGrid({ results = [] }) {
-  if (!results.length) {
+/**
+ * Props:
+ * - items?: array of product objects
+ * - emptyMessage?: string
+ */
+export default function ResultsGrid({
+  items = [],
+  emptyMessage = 'No results. Try "iphone", "headphones", or "lego".',
+}) {
+  if (!Array.isArray(items) || items.length === 0) {
     return (
-      <div className="mt-6 text-center text-slate-600">
-        No results. Try “iPhone”, “headphones”, or “Lego”.
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="rounded-xl border bg-white p-8 text-center text-gray-600">
+          {emptyMessage}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="grid gap-6 mt-6 sm:grid-cols-2 lg:grid-cols-3">
-      {results.map((item) => (
-        <PriceCard key={item.id} item={item} />
-      ))}
+    <div className="mx-auto max-w-6xl px-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {items.map((it, idx) => (
+          <ProductCard key={it.product_id || it.link || idx} item={it} />
+        ))}
+      </div>
     </div>
   );
 }
