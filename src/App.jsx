@@ -1,50 +1,42 @@
-import React, { useMemo, useState } from "react";
-import Header from "./components/Header.jsx";
-import SearchBar from "./components/SearchBar.jsx";
-import ResultsGrid from "./components/ResultsGrid.jsx";
-import Footer from "./components/Footer.jsx";
-import productsData from "./data/products.json";
+// src/App.jsx
+import React from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import SiteFooter from "./components/SiteFooter";
 
 export default function App() {
-  const [query, setQuery] = useState("");
-  const [sort, setSort] = useState("best"); // best | price_asc | price_desc
-
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    const filtered = !q
-      ? productsData
-      : productsData.filter((p) =>
-          [p.title, p.category, p.brand].join(" ").toLowerCase().includes(q)
-        );
-
-    const sorted = [...filtered].sort((a, b) => {
-      if (sort === "price_asc") return a.best_price - b.best_price;
-      if (sort === "price_desc") return b.best_price - a.best_price;
-      const retailersDiff = (b.retailers?.length || 0) - (a.retailers?.length || 0);
-      if (retailersDiff !== 0) return retailersDiff;
-      return a.best_price - b.best_price;
-    });
-
-    return sorted;
-  }, [query, sort]);
-
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      {/* Top bar (simple) */}
+      <header className="border-b">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          <Link to="/" className="text-lg font-semibold">
+            PricePilot UK
+          </Link>
+          <nav className="flex gap-4 text-sm">
+            <Link to="/about" className="hover:underline">About</Link>
+            <Link to="/privacy" className="hover:underline">Privacy</Link>
+            <Link to="/terms" className="hover:underline">Terms</Link>
+          </nav>
+        </div>
+      </header>
+
+      {/* Page content */}
       <main className="flex-1">
-        <section className="mx-auto max-w-6xl px-4 pb-8">
-          <div className="bg-white rounded-2xl shadow-soft p-6 -mt-10 relative z-10">
-            <SearchBar
-              query={query}
-              onChange={setQuery}
-              sort={sort}
-              onSortChange={setSort}
-            />
-            <ResultsGrid results={results} />
-          </div>
-        </section>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          {/* Fallback: if no route matches */}
+          <Route path="*" element={<Home />} />
+        </Routes>
       </main>
-      <Footer />
+
+      <SiteFooter />
     </div>
   );
 }
