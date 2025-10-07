@@ -1,81 +1,81 @@
-import { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Header from "./components/Header";
+import SiteFooter from "./components/SiteFooter";
 import SearchBar from "./components/SearchBar";
 import ResultsGrid from "./components/ResultsGrid";
-import SiteFooter from "./components/SiteFooter";
+import "./index.css";
 
+const DOMAIN = import.meta.env.VITE_GOOGLE_DOMAIN || "google.co.uk";
 const GL = import.meta.env.VITE_GL || "uk";
-const GOOGLE_DOMAIN = import.meta.env.VITE_GOOGLE_DOMAIN || "google.co.uk";
-const SERP_KEY = import.meta.env.VITE_SERPAPI_KEY || "";
+const HL = import.meta.env.VITE_HL || "en";
+const KEY = import.meta.env.VITE_SERPAPI_KEY || "";
 
 export default function App() {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
+  const [q, setQ] = useState("");
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [err, setErr] = useState("");
 
-  async function handleSearch(q) {
-    const trimmed = q.trim();
-    setQuery(trimmed);
-    setError("");
-    setResults([]);
-    if (!trimmed) return;
+  const ready = useMemo(() => Boolean(KEY), [KEY]);
 
-    if (!SERP_KEY) {
-      setError("Missing SERPAPI key. Add VITE_SERPAPI_KEY and redeploy.");
-      return;
+  // Show a small notice if key is missing at build time
+  useEffect(() => {
+    if (!ready) {
+      setErr("Missing API key. Add VITE_SERPAPI_KEY and force rebuild.");
     }
+  }, [ready]);
 
+  async function runSearch(query) {
+    const term = (query ?? q).trim();
+    if (!term) return;
     setLoading(true);
+    setErr("");
+    setItems([]);
+
     try {
-      const url = new URL("https://serpapi.com/search.json");
-      url.searchParams.set("engine", "google_shopping");
-      url.searchParams.set("q", trimmed);
-      url.searchParams.set("gl", GL);
-      url.searchParams.set("hl", "en");
-      url.searchParams.set("google_domain", GOOGLE_DOMAIN);
-      url.searchParams.set("api_key", SERP_KEY);
+      const params = new URLSearchParams({
+        engine: "google_shopping",
+        q: term,
+        google_domain: DOMAIN,
+        gl: GL,
+        hl: HL,
+        api_key: KEY,
+      });
 
-      const r = await fetch(url.toString());
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const data = await r.json();
+      const res = await fetch(`https://serpapi.com/search.json?${params.toString()}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
 
-      const items = (data.shopping_results || []).map((it) => ({
-        id: it.product_id || it.position || it.serpapi_product_api || it.link,
-        title: it.title,
-        price: it.price || it.extracted_price || it.secondary_offer_price,
-        merchant: it.source,
-        link: it.link,
-        thumbnail: it.thumbnail || it.product_photos?.[0],
-      }));
-      setResults(items);
+      // Accept several possible arrays SerpAPI can return
+      const arr = data.shopping_results || data.organic_results || data.results || [];
+      if (!arr.length) throw new Error("No results returned for this query.");
+      setItems(arr);
     } catch (e) {
-      setError("Search failed. Try again or refine your query.");
       console.error(e);
+      setErr("Search failed. Try again or refine your query.");
     } finally {
       setLoading(false);
     }
   }
 
+  // Demo: load a first query so the page never looks empty
+  useEffect(() => { runSearch("AirPods Pro 2"); /* ignore eslint */ }, []);
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       <Header />
-      <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-8">
-        <SearchBar onSearch={handleSearch} defaultValue={query} />
-        {loading && (
-          <p className="mt-6 text-sm text-gray-500">Searching… please wait.</p>
-        )}
-        {error && (
-          <p className="mt-6 text-sm text-red-600">{error}</p>
-        )}
-        {!loading && !error && results.length === 0 && (
-          <p className="mt-10 text-gray-500">
-            Try a search like <em>“iPhone 15”</em>, <em>“headphones”</em>, or <em>“Lego”</em>.
-          </p>
-        )}
-        <ResultsGrid items={results} />
+      <main className="container">
+        <section className="hero">
+          <h1>Find the best UK prices, fast.</h1>
+          <p>Search a product and compare offers from major UK retailers.</p>
+          <SearchBar value={q} onChange={setQ} onSubmit={() => runSearch(q)} loading={loading} />
+          {!ready && <div className="alert">Developer note: API key missing at build time.</div>}
+          {err && <div className="alert">{err}</div>}
+        </section>
+
+        <ResultsGrid items={items} />
       </main>
       <SiteFooter />
-    </div>
+    </>
   );
 }
