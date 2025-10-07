@@ -1,5 +1,5 @@
 // src/lib/api.js
-// Now safely calls your DigitalOcean serverless proxy
+// Calls your DigitalOcean serverless function (no CORS issues)
 
 const FN_URL =
   "https://faas-fra1-afec6ce7.doserverless.co/api/v1/web/fn-f90ec0fb-42a4-4b82-9417-be5790de6095/api/search";
@@ -7,21 +7,15 @@ const FN_URL =
 export async function searchProducts(query) {
   if (!query || !query.trim()) return [];
 
-  try {
-    const response = await fetch(`${FN_URL}?q=${encodeURIComponent(query)}`, {
-      method: "GET",
-      headers: { "Accept": "application/json" },
-    });
+  const res = await fetch(`${FN_URL}?q=${encodeURIComponent(query)}`, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+  });
 
-    if (!response.ok) {
-      console.error("API response error:", response.status);
-      throw new Error("Search request failed");
-    }
-
-    const data = await response.json();
-    return data.items || [];
-  } catch (error) {
-    console.error("Fetch error:", error);
-    throw error;
+  if (!res.ok) {
+    throw new Error(`Search request failed: ${res.status}`);
   }
+
+  const data = await res.json();
+  return data.items || [];
 }
