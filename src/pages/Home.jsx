@@ -6,8 +6,10 @@ export default function Home() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [hasSearched, setHasSearched] = useState(false); // NEW
 
   const handleSearch = async (query) => {
+    setHasSearched(true);         // NEW: we’ve now tried at least once
     setError("");
     setLoading(true);
 
@@ -15,14 +17,15 @@ export default function Home() {
       const r = await fetch(
         `https://faas-fra1-afec6ce7.doserverless.co/api/v1/web/fn-f90ec0fb-42a4-4b82-9417-be5790de6095/api/search?q=${encodeURIComponent(
           query
-        )}`
+        )}`,
+        { headers: { Accept: "application/json" } }
       );
 
       if (!r.ok) throw new Error(`Search failed (${r.status})`);
       const data = await r.json();
       setResults(data.items || []);
-    } catch (err) {
-      console.error(err);
+    } catch (e) {
+      console.error(e);
       setError("Search failed. Try again or refine your query.");
     } finally {
       setLoading(false);
@@ -41,10 +44,12 @@ export default function Home() {
       <SearchBar onSearch={handleSearch} />
 
       {loading && <p className="text-gray-400 mt-4">Loading...</p>}
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+      {/* Only show error after a search was attempted */}
+      {!loading && hasSearched && error && (
+        <p className="text-red-500 mt-4">{error}</p>
+      )}
 
       <ResultsGrid results={results} />
     </div>
   );
 }
-

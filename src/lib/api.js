@@ -14,5 +14,3 @@ export async function searchProducts(query) {
   const data = await r.json();
   return data.items || [];
 }
-
-
