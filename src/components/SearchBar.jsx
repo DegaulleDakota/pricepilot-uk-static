@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 
-export default function SearchBar({ onSearch }) {
-  const [value, setValue] = useState("");
+export default function SearchBar({ onSearch, loading = false }) {
+  const [value, setValue] = useState("");               // EMPTY by default
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!value.trim()) return;
-    onSearch(value.trim());
+    e.preventDefault();                                 // prevent page reload
+    const q = value.trim();
+    if (!q) return;                                     // do nothing on empty
+    onSearch?.(q);                                      // call parent handler
   };
 
   return (
@@ -18,7 +19,9 @@ export default function SearchBar({ onSearch }) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
-      <button className="btn" type="submit">Search</button>
+      <button className="btn" type="submit" disabled={loading}>
+        {loading ? "Searching…" : "Search"}
+      </button>
     </form>
   );
 }
