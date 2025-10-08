@@ -43,24 +43,24 @@ export default function ResultsGrid({ results = [] }) {
             key={i}
             className="bg-gray-900 text-white rounded-2xl shadow-lg p-4 flex flex-col transition-transform hover:scale-105 hover:shadow-xl"
           >
-            <div className="w-full h-48 flex items-center justify-center bg-white rounded-lg mb-3 overflow-hidden">
+            <div className="w-full h-52 flex items-center justify-center bg-white rounded-lg mb-3 overflow-hidden">
               <img
                 src={item.thumbnail || item.image || "/placeholder.png"}
                 alt={item.title || "Product image"}
-                className="object-contain h-full w-full"
+                className="object-contain h-full w-auto"
               />
             </div>
 
-            <h3 className="font-semibold text-md leading-tight line-clamp-2 min-h-[2.5rem]">
+            <h3 className="font-semibold text-md leading-tight line-clamp-2 mb-1">
               {item.title || "Untitled"}
             </h3>
 
-            <p className="text-gray-400 text-sm mt-1">
+            <p className="text-gray-400 text-sm mb-2 truncate">
               {item.source || item.merchant || "Unknown retailer"}
             </p>
 
             {displayPrice && (
-              <p className="text-green-400 font-bold text-lg mt-2">
+              <p className="text-green-400 font-bold text-lg mb-3">
                 {displayPrice}
               </p>
             )}
@@ -70,7 +70,7 @@ export default function ResultsGrid({ results = [] }) {
                 href={item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-400 hover:text-blue-300 text-sm font-medium mt-auto pt-3"
+                className="text-blue-400 hover:text-blue-300 text-sm font-medium mt-auto"
               >
                 View on retailer site →
               </a>
@@ -81,4 +81,3 @@ export default function ResultsGrid({ results = [] }) {
     </div>
   );
 }
-
