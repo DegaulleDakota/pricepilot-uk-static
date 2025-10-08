@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 
 export default function SearchBar({ onSearch, loading = false }) {
-  const [value, setValue] = useState("");               // EMPTY by default
+  const [value, setValue] = useState(""); // EMPTY by default
 
   const handleSubmit = (e) => {
-    e.preventDefault();                                 // prevent page reload
+    e.preventDefault();
     const q = value.trim();
-    if (!q) return;                                     // do nothing on empty
-    onSearch?.(q);                                      // call parent handler
+    console.log("[SearchBar] submit, value:", q);
+    if (!q) return;
+    onSearch?.(q);
   };
 
   return (
@@ -17,7 +18,10 @@ export default function SearchBar({ onSearch, loading = false }) {
         type="search"
         placeholder="Search laptops, TVs, AirPods, Lego…"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => {
+          console.log("[SearchBar] change:", e.target.value);
+          setValue(e.target.value);
+        }}
       />
       <button className="btn" type="submit" disabled={loading}>
         {loading ? "Searching…" : "Search"}
