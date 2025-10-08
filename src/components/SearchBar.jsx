@@ -6,7 +6,7 @@ export default function SearchBar({
   onSubmit,
   loading,
   error,
-  hasSearched, // NEW: controls when to show errors
+  hasSearched, // Controls when to show errors
 }) {
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,8 +27,8 @@ export default function SearchBar({
           autoComplete="off"
           autoCorrect="off"
           spellCheck={false}
-          placeholder="Search laptops, TVs, AirPods, Lego…"
-          className="flex-1 rounded-2xl border border-white/10 bg-gray-800/60 px-4 py-3 text-base text-white placeholder-gray-400 outline-none ring-0 transition focus:border-blue-400/50 focus:bg-gray-800"
+          placeholder="Search laptops, TVs, AirPods, Lego..."
+          className="flex-1 rounded-2xl border border-white/10 bg-gray-800/60 px-4 py-3 text-base text-white placeholder-gray-400 outline-none transition focus:border-blue-400/50 focus:bg-gray-800"
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           aria-invalid={!!error && hasSearched}
@@ -38,19 +38,15 @@ export default function SearchBar({
           disabled={loading}
           className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-blue-500 disabled:opacity-60"
         >
-          {loading ? "Searching…" : "Search"}
+          {loading ? "Searching..." : "Search"}
         </button>
       </form>
 
-      {/* Helper / error message area */}
+      {/* Error only shown AFTER first search */}
       <div className="mx-auto mt-3 max-w-3xl min-h-[1.25rem]">
-        {hasSearched && error ? (
+        {hasSearched && error && (
           <p className="text-sm text-red-400">
             {error || "Search failed. Try again or refine your query."}
-          </p>
-        ) : (
-          <p className="text-sm text-gray-400">
-            Tip: try “iPhone 15”, “LG OLED TV”, or “Lego Millennium Falcon”.
           </p>
         )}
       </div>
