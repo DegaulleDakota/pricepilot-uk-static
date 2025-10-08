@@ -1,98 +1,92 @@
 import React from "react";
+import { formatGBP } from "../lib/utils";
 
-// Try to keep a single clean price string (no double £)
-function formatPrice(raw) {
-  if (!raw) return "";
-  const s = String(raw).trim();
-  // If already starts with £, just return first token
-  if (s.startsWith("£")) return s.split(/\s+/)[0];
-  // Otherwise extract the first number-like token and prefix £
-  const match = s.match(/(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/);
-  return match ? `£${match[1]}` : s;
+function choose(value, ...alts) {
+  return value ?? alts.find((x) => x != null);
 }
 
-function firstImg(item) {
-  // prefer serpapi_thumbnail or thumbnail
+function normalisePrice(item) {
+  // SerpAPI fields vary; try the most reliable first
+  const n =
+    choose(item.extracted_price, item.price) ??
+    choose(item.unit_price, item.sale_price);
+  return typeof n === "number" ? n : undefined;
+}
+
+function productLink(item) {
+  return choose(item.product_link, item.link, item.source?.link) || "#";
+}
+
+function imageSrc(item) {
+  return choose(item.thumbnail, item.serpapi_thumbnail, item.image);
+}
+
+function sellerName(item) {
   return (
-    item.serpapi_thumbnail ||
-    item.thumbnail ||
-    (item.images && item.images[0]) ||
-    ""
-  );
-}
-
-function sellerList(item) {
-  // normalize a short list of sellers for visual consistency
-  const sellers = [];
-  if (item.store) sellers.push(item.store);
-  if (Array.isArray(item.sellers)) sellers.push(...item.sellers);
-  if (Array.isArray(item.offers)) {
-    for (const o of item.offers) {
-      if (o?.seller) sellers.push(o.seller);
-    }
-  }
-  const uniq = [...new Set(sellers.map(String))].slice(0, 2); // max 2 lines
-  return uniq;
+    choose(item.source, item.seller, item.store, item.merchant, item.domain) ||
+    "Retailer"
+  ).toString();
 }
 
 export default function ProductCard({ item }) {
-  const img = firstImg(item);
-  const title =
-    item.title?.trim() ||
-    item.product_title?.trim() ||
-    "Product";
-
-  const price =
-    formatPrice(item.price) ||
-    formatPrice(item.extracted_price) ||
-    formatPrice(item.price_str) ||
-    "";
-
-  const sellers = sellerList(item);
+  const price = normalisePrice(item);
+  const href = productLink(item);
+  const seller = sellerName(item);
+  const img = imageSrc(item);
 
   return (
-    <article className="rounded-2xl border border-white/10 bg-gray-900/70 shadow-sm hover:shadow-md transition overflow-hidden">
-      {/* fixed aspect ratio image area to align rows */}
-      <div className="aspect-[4/3] w-full overflow-hidden bg-gray-800">
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="
+        group rounded-2xl border border-slate-800/80 bg-slate-900/60
+        overflow-hidden shadow-sm hover:shadow-md hover:border-indigo-500/40
+        transition
+        flex flex-col
+      "
+    >
+      <div className="aspect-[4/3] bg-slate-800 overflow-hidden">
         {img ? (
           <img
             src={img}
-            alt={title}
-            className="h-full w-full object-cover"
+            alt={item.title || "Product image"}
+            className="h-full w-full object-cover object-center group-hover:scale-[1.02] transition"
             loading="lazy"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-gray-500">
+          <div className="h-full w-full grid place-items-center text-slate-500">
             No image
           </div>
         )}
       </div>
 
-      <div className="p-4">
-        <h3
-          className="
-            line-clamp-2 text-base font-semibold leading-snug
-            text-white min-h-[2.75rem]
-          "
-          title={title}
-        >
-          {title}
+      <div className="p-4 flex flex-col gap-2 grow">
+        <h3 className="text-sm font-medium leading-snug line-clamp-2">
+          {item.title || "Untitled product"}
         </h3>
 
-        <div className="mt-2 flex items-baseline justify-between">
-          <span className="text-lg font-bold text-white">
-            {price || "—"}
-          </span>
+        <div className="flex items-center justify-between mt-auto">
+          <span className="text-xs text-slate-400">{seller}</span>
+          {price !== undefined ? (
+            <span className="text-lg font-semibold text-slate-100">
+              {formatGBP(price)}
+            </span>
+          ) : (
+            <span className="text-xs text-slate-400">View price</span>
+          )}
         </div>
 
-        {sellers.length > 0 && (
-          <ul className="mt-2 space-y-0.5 text-xs text-gray-300">
-            {sellers.map((s) => (
-              <li key={s} className="truncate">{s}</li>
-            ))}
-          </ul>
-        )}
+        <button
+          className="
+            mt-2 inline-flex items-center justify-center
+            rounded-xl px-3 py-2 text-sm font-medium
+            bg-indigo-500 text-white hover:bg-indigo-400
+          "
+        >
+          View deal
+        </button>
       </div>
-    </article>
+    </a>
   );
 }

@@ -1,72 +1,63 @@
 import React, { useState } from "react";
-import Header from "../components/Header.jsx";
-import SearchBar from "../components/SearchBar.jsx";
-import ResultsGrid from "../components/ResultsGrid.jsx";
-import { searchProducts } from "../lib/api.js";
+import Header from "../components/Header";
+import SearchBar from "../components/SearchBar";
+import ResultsGrid from "../components/ResultsGrid";
+import { searchProducts } from "../lib/api";
 
 export default function Home() {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
+  const [q, setQ] = useState("");
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [hasSearched, setHasSearched] = useState(false); // gate for errors
 
-  const doSearch = async () => {
-    setHasSearched(true);
-    setError("");
+  const runSearch = async () => {
+    const query = q.trim();
+    if (!query) return;
     setLoading(true);
+    setError("");
     try {
-      const items = await searchProducts(query);
-      setResults(items || []);
-      if (!items || items.length === 0) {
-        setError("No results found. Try a different product.");
-      }
+      const res = await searchProducts(query);
+      setItems(Array.isArray(res) ? res : []);
     } catch (e) {
-      setError("Search failed. Try again or refine your query.");
-      console.error("[SearchError]", e);
+      setError("Sorry—something went wrong. Please try again.");
+      setItems([]);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 to-gray-900 text-white">
+    <>
       <Header />
-
-      <main className="mx-auto w-full max-w-6xl px-4">
-        {/* Hero / headline */}
-        <section className="pt-12 pb-6 text-center">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-            Find the best UK prices, fast.
-          </h1>
-          <p className="mt-3 text-gray-300">
-            Search a product and compare offers from major UK retailers.
-          </p>
-
-          <div className="mt-8">
-            <SearchBar
-              value={query}
-              onChange={setQuery}
-              onSubmit={doSearch}
-              loading={loading}
-              error={error}
-              hasSearched={hasSearched}
-            />
+      <main className="container-page">
+        <section className="section-lg">
+          <div className="max-w-3xl">
+            <h1 className="text-3xl sm:text-4xl font-semibold leading-tight mb-3">
+              Find the best UK prices, fast.
+            </h1>
+            <p className="text-slate-300 mb-6">
+              Search a product and compare offers from major UK retailers.
+            </p>
           </div>
+
+          <SearchBar
+            value={q}
+            onChange={setQ}
+            onSubmit={runSearch}
+            loading={loading}
+          />
+
+          {error && (
+            <div className="mt-4 rounded-xl border border-red-500/40 bg-red-500/10 text-red-200 px-4 py-3">
+              {error}
+            </div>
+          )}
         </section>
 
-        {/* Results */}
-        {!loading && <ResultsGrid results={results} />}
-
-        {/* Loading note */}
-        {loading && (
-          <p className="mt-10 text-center text-gray-300">Getting the best prices…</p>
-        )}
+        <section className="section">
+          <ResultsGrid items={items} loading={loading} />
+        </section>
       </main>
-
-      <footer className="mt-16 border-t border-white/10 py-10 text-center text-sm text-gray-400">
-        © {new Date().getFullYear()} Pricepilot UK. All rights reserved.
-      </footer>
-    </div>
+    </>
   );
 }

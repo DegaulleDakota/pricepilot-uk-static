@@ -1,24 +1,62 @@
 import React from "react";
+import { Link, NavLink } from "react-router-dom";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-gradient-to-b from-gray-950 to-gray-900/80 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        {/* Brand */}
-        <a href="/" className="inline-flex items-center gap-2">
-          <div className="h-8 w-8 rounded-xl bg-blue-500/20 ring-1 ring-blue-400/30 grid place-items-center">
-            <span className="text-blue-300 font-black">£</span>
-          </div>
-          <span className="text-lg font-semibold tracking-tight text-white">
-            Pricepilot <span className="text-blue-300">UK</span>
+    <header className="sticky top-0 z-40 w-full backdrop-blur supports-[backdrop-filter]:bg-slate-950/55 bg-slate-950/80 border-b border-slate-800">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+        {/* brand */}
+        <Link to="/" className="flex items-center gap-2">
+          <div className="h-6 w-6 rounded-md bg-gradient-to-br from-indigo-400 to-sky-400" />
+          <span className="sr-only">Pricepilot UK</span>
+          <span className="hidden sm:block font-semibold tracking-tight">
+            Pricepilot UK
           </span>
-        </a>
+        </Link>
 
-        {/* Simple top nav (optional) */}
-        <nav className="hidden sm:flex items-center gap-6 text-sm text-gray-300">
-          <a className="hover:text-white" href="/about">About</a>
-          <a className="hover:text-white" href="/privacy">Privacy</a>
-          <a className="hover:text-white" href="/terms">Terms</a>
+        {/* nav */}
+        <nav className="flex items-center gap-6 text-sm">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              `hover:text-slate-100 transition ${
+                isActive ? "text-slate-100" : "text-slate-300"
+              }`
+            }
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              `hover:text-slate-100 transition ${
+                isActive ? "text-slate-100" : "text-slate-300"
+              }`
+            }
+          >
+            About
+          </NavLink>
+          <NavLink
+            to="/privacy"
+            className={({ isActive }) =>
+              `hover:text-slate-100 transition ${
+                isActive ? "text-slate-100" : "text-slate-300"
+              }`
+            }
+          >
+            Privacy
+          </NavLink>
+          <NavLink
+            to="/terms"
+            className={({ isActive }) =>
+              `hover:text-slate-100 transition ${
+                isActive ? "text-slate-100" : "text-slate-300"
+              }`
+            }
+          >
+            Terms
+          </NavLink>
         </nav>
       </div>
     </header>
