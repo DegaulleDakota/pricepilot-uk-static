@@ -9,10 +9,10 @@ export async function searchProducts(query) {
     headers: { Accept: "application/json" },
   });
 
-  if (!r.ok) {
-    throw new Error(`Search failed: ${r.status}`);
-  }
+  if (!r.ok) throw new Error(`Search failed: ${r.status}`);
 
   const data = await r.json();
   return data.items || [];
 }
+
+
