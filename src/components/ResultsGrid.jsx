@@ -1,43 +1,82 @@
 import React from "react";
 
-export default function ResultsGrid({ results = [] }) {
-  console.log("[ResultsGrid] rendering", results.length, "items");
+// Smart GBP formatter: accepts "£199", "199", 199, "199.00", etc.
+function formatPrice(value) {
+  if (value == null) return null;
 
-  if (!results.length) {
-    return null;
+  if (typeof value === "string") {
+    const s = value.trim();
+    // If the API already included a currency symbol, just return it.
+    if (/£/.test(s)) return s;
+    // Try to extract a number from the string and format it
+    const num = parseFloat(s.replace(/[^\d.]/g, ""));
+    if (!isNaN(num)) {
+      return new Intl.NumberFormat("en-GB", {
+        style: "currency",
+        currency: "GBP",
+        maximumFractionDigits: 2,
+      }).format(num);
+    }
+    return s; // fall back to raw string
   }
+
+  if (typeof value === "number") {
+    return new Intl.NumberFormat("en-GB", {
+      style: "currency",
+      currency: "GBP",
+      maximumFractionDigits: 2,
+    }).format(value);
+  }
+
+  return String(value);
+}
+
+export default function ResultsGrid({ results = [] }) {
+  if (!results.length) return null;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8 w-full max-w-6xl">
-      {results.map((item, i) => (
-        <div
-          key={i}
-          className="bg-gray-800 text-white rounded-xl shadow p-4 flex flex-col"
-        >
-          <img
-            src={item.thumbnail || item.image || "/placeholder.png"}
-            alt={item.title || "Product image"}
-            className="rounded-lg mb-2 w-full h-40 object-contain bg-white"
-          />
-          <h3 className="font-semibold text-lg mb-1 truncate">{item.title}</h3>
-          <p className="text-gray-300 text-sm mb-2">{item.source || "Unknown retailer"}</p>
-          {item.price && (
-            <p className="text-green-400 font-bold text-md mb-2">
-              £{item.price}
+      {results.map((item, i) => {
+        const displayPrice = formatPrice(
+          item.price ?? item.price_text ?? item.priceValue
+        );
+
+        return (
+          <div
+            key={i}
+            className="bg-gray-800 text-white rounded-xl shadow p-4 flex flex-col"
+          >
+            <img
+              src={item.thumbnail || item.image || "/placeholder.png"}
+              alt={item.title || "Product image"}
+              className="rounded-lg mb-2 w-full h-40 object-contain bg-white"
+            />
+            <h3 className="font-semibold text-lg mb-1 line-clamp-2">
+              {item.title || "Untitled"}
+            </h3>
+            <p className="text-gray-300 text-sm mb-2">
+              {item.source || item.merchant || "Unknown retailer"}
             </p>
-          )}
-          {item.link && (
-            <a
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 hover:underline text-sm mt-auto"
-            >
-              View on retailer site →
-            </a>
-          )}
-        </div>
-      ))}
+
+            {displayPrice && (
+              <p className="text-green-400 font-bold text-md mb-2">
+                {displayPrice}
+              </p>
+            )}
+
+            {item.link && (
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:underline text-sm mt-auto"
+              >
+                View on retailer site →
+              </a>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
