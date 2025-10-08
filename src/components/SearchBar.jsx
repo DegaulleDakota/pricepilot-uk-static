@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export default function SearchBar({ onSearch, loading = false }) {
-  const [value, setValue] = useState(""); // EMPTY by default
+  const [value, setValue] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -12,9 +12,14 @@ export default function SearchBar({ onSearch, loading = false }) {
   };
 
   return (
-    <form className="search-bar" onSubmit={handleSubmit} role="search" aria-label="Product search">
+    <form
+      className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-xl"
+      onSubmit={handleSubmit}
+      role="search"
+      aria-label="Product search"
+    >
       <input
-        className="input"
+        className="flex-grow px-4 py-2 rounded text-black"
         type="search"
         placeholder="Search laptops, TVs, AirPods, Lego…"
         value={value}
@@ -23,7 +28,11 @@ export default function SearchBar({ onSearch, loading = false }) {
           setValue(e.target.value);
         }}
       />
-      <button className="btn" type="submit" disabled={loading}>
+      <button
+        className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded text-white font-medium"
+        type="submit"
+        disabled={loading}
+      >
         {loading ? "Searching…" : "Search"}
       </button>
     </form>

@@ -20,17 +20,19 @@ export default function Home() {
     try {
       const url = new URL(FN_URL);
       url.searchParams.set("q", query);
-      // cache-bust while debugging to avoid any stale caching
       url.searchParams.set("_t", Date.now().toString());
 
       console.log("[Home] fetching:", url.toString());
-      const r = await fetch(url.toString(), { headers: { Accept: "application/json" } });
+      const r = await fetch(url.toString(), {
+        headers: { Accept: "application/json" },
+      });
       console.log("[Home] response status:", r.status);
 
       if (!r.ok) throw new Error(`Search failed (${r.status})`);
 
       const data = await r.json();
       console.log("[Home] data received:", data);
+      console.log("[Home] results count:", data.items?.length);
       setResults(data.items || []);
     } catch (e) {
       console.error("[Home] ERROR:", e);
@@ -41,13 +43,14 @@ export default function Home() {
   };
 
   const pingFunction = async () => {
-    // A manual test to confirm network works even if the SearchBar wiring didn’t.
     try {
       const url = new URL(FN_URL);
       url.searchParams.set("q", "iphone 13");
       url.searchParams.set("_t", Date.now().toString());
       console.log("[Ping] fetching:", url.toString());
-      const r = await fetch(url.toString(), { headers: { Accept: "application/json" } });
+      const r = await fetch(url.toString(), {
+        headers: { Accept: "application/json" },
+      });
       console.log("[Ping] status:", r.status);
       const data = await r.json();
       alert(`Ping OK: got ${Array.isArray(data.items) ? data.items.length : 0} items`);
@@ -64,12 +67,13 @@ export default function Home() {
         Search a product and compare offers from major UK retailers.
       </p>
 
-      {/* DEBUG: quick network test */}
-      <button className="btn mb-4" onClick={pingFunction}>Ping function</button>
+      {/* Debug button */}
+      <button className="btn mb-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded" onClick={pingFunction}>
+        Ping function
+      </button>
 
       <SearchBar onSearch={handleSearch} loading={loading} />
 
-      {/* only show error after first real search */}
       {!loading && hasSearched && error && (
         <p className="text-red-500 mt-4">{error}</p>
       )}
