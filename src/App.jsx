@@ -1,39 +1,61 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+// src/pages/Home.jsx
+import React, { useState } from "react";
+import SearchBar from "../components/SearchBar";
+import ResultsGrid from "../components/ResultsGrid";
+import { searchProducts } from "../lib/api";
 
-import Header from "./components/Header";
-import SiteFooter from "./components/SiteFooter";
+export default function Home() {
+  const [q, setQ] = useState("");
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-// pages
-import Home from "./pages/Home";
-import About from "./pages/About";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfService from "./pages/TermsOfService";
+  async function runSearch() {
+    const query = q.trim();
+    if (!query) return;
+    setLoading(true);
+    setError("");
+    try {
+      const res = await searchProducts(query);
+      setItems(Array.isArray(res) ? res : []);
+    } catch (e) {
+      console.error(e);
+      setItems([]);
+      setError("Sorry—something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
-// Optional: a simple 404
-function NotFound() {
   return (
     <main className="container-page">
       <section className="section-lg">
-        <h1 className="text-3xl font-semibold mb-3">Page not found</h1>
-        <p className="text-slate-300">The page you’re looking for doesn’t exist.</p>
+        <div className="max-w-3xl">
+          <h1 className="text-3xl sm:text-4xl font-semibold leading-tight mb-3">
+            Find the best UK prices, fast.
+          </h1>
+          <p className="text-slate-300 mb-6">
+            Search a product and compare offers from major UK retailers.
+          </p>
+        </div>
+
+        <SearchBar
+          value={q}
+          onChange={setQ}
+          onSubmit={runSearch}
+          loading={loading}
+        />
+
+        {error && (
+          <div className="mt-4 rounded-xl border border-red-500/40 bg-red-500/10 text-red-200 px-4 py-3">
+            {error}
+          </div>
+        )}
+      </section>
+
+      <section className="section">
+        <ResultsGrid items={items} loading={loading} />
       </section>
     </main>
-  );
-}
-
-export default function App() {
-  return (
-    <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsOfService />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <SiteFooter />
-    </BrowserRouter>
   );
 }
