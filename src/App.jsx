@@ -14,8 +14,10 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
+        {/* fallback */}
         <Route path="*" element={<Home />} />
       </Routes>
     </Router>
   );
 }
+
