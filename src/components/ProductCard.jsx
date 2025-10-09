@@ -6,7 +6,6 @@ function choose(value, ...alts) {
 }
 
 function normalisePrice(item) {
-  // SerpAPI fields vary; try the most reliable first
   const n =
     choose(item.extracted_price, item.price) ??
     choose(item.unit_price, item.sale_price);
@@ -35,58 +34,62 @@ export default function ProductCard({ item }) {
   const img = imageSrc(item);
 
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
+    <div
       className="
         group rounded-2xl border border-slate-800/80 bg-slate-900/60
         overflow-hidden shadow-sm hover:shadow-md hover:border-indigo-500/40
-        transition
-        flex flex-col
+        transition flex flex-col
       "
     >
-      <div className="aspect-[4/3] bg-slate-800 overflow-hidden">
-        {img ? (
-          <img
-            src={img}
-            alt={item.title || "Product image"}
-            className="h-full w-full object-cover object-center group-hover:scale-[1.02] transition"
-            loading="lazy"
-          />
-        ) : (
-          <div className="h-full w-full grid place-items-center text-slate-500">
-            No image
-          </div>
-        )}
-      </div>
-
-      <div className="p-4 flex flex-col gap-2 grow">
-        <h3 className="text-sm font-medium leading-snug line-clamp-2">
-          {item.title || "Untitled product"}
-        </h3>
-
-        <div className="flex items-center justify-between mt-auto">
-          <span className="text-xs text-slate-400">{seller}</span>
-          {price !== undefined ? (
-            <span className="text-lg font-semibold text-slate-100">
-              {formatGBP(price)}
-            </span>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener sponsored nofollow"
+        className="flex flex-col h-full"
+      >
+        <div className="aspect-[4/3] bg-slate-800 overflow-hidden">
+          {img ? (
+            <img
+              src={img}
+              alt={item.title || 'Product image'}
+              className="h-full w-full object-cover object-center group-hover:scale-[1.02] transition"
+              loading="lazy"
+            />
           ) : (
-            <span className="text-xs text-slate-400">View price</span>
+            <div className="h-full w-full grid place-items-center text-slate-500">
+              No image
+            </div>
           )}
         </div>
 
-        <button
-          className="
-            mt-2 inline-flex items-center justify-center
-            rounded-xl px-3 py-2 text-sm font-medium
-            bg-indigo-500 text-white hover:bg-indigo-400
-          "
-        >
-          View deal
-        </button>
-      </div>
-    </a>
+        <div className="p-4 flex flex-col gap-2 grow">
+          <h3 className="text-sm font-medium leading-snug line-clamp-2">
+            {item.title || "Untitled product"}
+          </h3>
+
+          <div className="flex items-center justify-between mt-auto">
+            <span className="text-xs text-slate-400">{seller}</span>
+            {price !== undefined ? (
+              <span className="text-lg font-semibold text-slate-100">
+                {formatGBP(price)}
+              </span>
+            ) : (
+              <span className="text-xs text-slate-400">View price</span>
+            )}
+          </div>
+
+          <div
+            className="
+              mt-2 inline-flex items-center justify-center
+              rounded-xl px-3 py-2 text-sm font-medium
+              bg-indigo-500 text-white hover:bg-indigo-400
+              transition
+            "
+          >
+            View deal
+          </div>
+        </div>
+      </a>
+    </div>
   );
 }
