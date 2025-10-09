@@ -31,7 +31,20 @@ export default function SearchBar({ value, onChange, onSubmit, loading }) {
             placeholder="Search laptops, TVs, AirPods, Lego…"
             value={value}
             onChange={(e) => onChange?.(e.target.value)}
+            aria-label="Search products"
           />
+
+          {value ? (
+            <button
+              type="button"
+              onClick={() => onChange?.("")}
+              className="text-slate-400 hover:text-slate-200 px-2"
+              aria-label="Clear search"
+              title="Clear"
+            >
+              ×
+            </button>
+          ) : null}
 
           <button
             type="submit"
