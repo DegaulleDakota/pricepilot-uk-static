@@ -1,25 +1,41 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 export default function SiteFooter() {
   return (
-    <footer className="mt-16 border-t border-slate-800 bg-slate-950/60">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-          <p className="text-sm text-slate-400">
-            © {new Date().getFullYear()} PricePilot UK. All rights reserved.
-          </p>
-
-          <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-            <Link className="text-slate-300 hover:text-slate-100" to="/about">About</Link>
-            <Link className="text-slate-300 hover:text-slate-100" to="/privacy">Privacy</Link>
-            <Link className="text-slate-300 hover:text-slate-100" to="/terms">Terms</Link>
-          </nav>
+    <footer className="site-footer mt-12 border-t border-slate-800/60 bg-slate-950/50 backdrop-blur-sm">
+      <div
+        className="container mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-400"
+      >
+        <div className="text-center sm:text-left">
+          © {new Date().getFullYear()} PricePilot UK. All rights reserved.
+          <br />
+          <span className="block text-slate-500 text-xs mt-1">
+            Some of the retailers we feature may compensate us for referrals.
+            This helps us keep PricePilot UK running and free to use, and does
+            not influence the information or prices shown.
+          </span>
         </div>
 
-        <p className="mt-4 text-xs text-slate-500">
-          Disclosure: Some outbound links are affiliate links. If you click and buy, we may earn a commission at no extra cost to you.
-        </p>
+        <nav className="flex gap-4 text-sm">
+          <a
+            href="/about"
+            className="hover:text-indigo-400 transition-colors"
+          >
+            About
+          </a>
+          <a
+            href="/privacy"
+            className="hover:text-indigo-400 transition-colors"
+          >
+            Privacy
+          </a>
+          <a
+            href="/terms"
+            className="hover:text-indigo-400 transition-colors"
+          >
+            Terms
+          </a>
+        </nav>
       </div>
     </footer>
   );
